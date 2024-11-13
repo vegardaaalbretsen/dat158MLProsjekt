@@ -19,7 +19,7 @@ The primary goal is to develop a text-based emotion detection model to help busi
 - **Insights**: Offers business insights by identifying user sentiment and adjusting responses accordingly.
 
 ## Usage Instructions
-
+**Try it via the website, OR:**
 1. **Clone the Repository**:
    ```bash
    git clone https://github.com/h599002/dat158MLProsjekt.git
