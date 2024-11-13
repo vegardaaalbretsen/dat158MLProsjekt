@@ -2,11 +2,14 @@ import streamlit as st
 import pickle
 from nltk.tokenize import word_tokenize
 from nltk.stem import PorterStemmer
-import nltk
 import numpy as np
+import nltk
+import os
 
-# Download necessary NLTK data
-nltk.download('punkt')
+# Specify a custom nltk data directory
+nltk_data_dir = os.path.expanduser("~/.nltk_data")
+nltk.data.path.append(nltk_data_dir)
+nltk.download("punkt", download_dir=nltk_data_dir)
 
 # Load the pre-trained model and vectorizer
 with open('logistic_regression_model_tokens.pkl', 'rb') as model_file:
