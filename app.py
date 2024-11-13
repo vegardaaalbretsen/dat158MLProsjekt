@@ -2,13 +2,17 @@ import streamlit as st
 import pickle
 from nltk.tokenize import word_tokenize
 from nltk.stem import PorterStemmer
+import nltk
 import numpy as np
 
+# Download necessary NLTK data
+nltk.download('punkt')
+
 # Load the pre-trained model and vectorizer
-with open('logistic_regression_model_tokens.pkl', 'rb') as model_file:
+with open('MLProsjekt/saved_model/logistic_regression_model.pkl', 'rb') as model_file:
     model = pickle.load(model_file)
 
-with open('vectorizer_tokens.pkl', 'rb') as vectorizer_file:
+with open('MLProsjekt/saved_model/vectorizer.pkl', 'rb') as vectorizer_file:
     vectorizer = pickle.load(vectorizer_file)
 
 # Define emotion labels
@@ -19,7 +23,7 @@ stemmer = PorterStemmer()
 
 # Set up the Streamlit app layout
 st.title("Text Analysis App")
-st.write("Enter some text below to analyze sentiment or classify it into either Sadness, Joy, Love, Anger, Fear or Surprise.")
+st.write("Enter some text below to analyze sentiment or classify it into either Sadness, Joy, Love, Anger, Fear, or Surprise.")
 
 # Text input for the user
 user_input = st.text_area("Enter your text here:")
