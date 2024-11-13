@@ -5,10 +5,10 @@ from nltk.stem import PorterStemmer
 import numpy as np
 
 # Load the pre-trained model and vectorizer
-with open('MLProsjekt/MLProsjektet/logistic_regression_model_tokens.pkl', 'rb') as model_file:
+with open('logistic_regression_model_tokens.pkl', 'rb') as model_file:
     model = pickle.load(model_file)
 
-with open('MLProsjekt/MLProsjektet/vectorizer_tokens.pkl', 'rb') as vectorizer_file:
+with open('vectorizer_tokens.pkl', 'rb') as vectorizer_file:
     vectorizer = pickle.load(vectorizer_file)
 
 # Define emotion labels
