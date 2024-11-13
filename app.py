@@ -9,10 +9,10 @@ import numpy as np
 nltk.download('punkt')
 
 # Load the pre-trained model and vectorizer
-with open('MLProsjekt/saved_model/logistic_regression_model.pkl', 'rb') as model_file:
+with open('logistic_regression_model_tokens.pkl', 'rb') as model_file:
     model = pickle.load(model_file)
 
-with open('MLProsjekt/saved_model/vectorizer.pkl', 'rb') as vectorizer_file:
+with open('vectorizer_tokens.pkl', 'rb') as vectorizer_file:
     vectorizer = pickle.load(vectorizer_file)
 
 # Define emotion labels
