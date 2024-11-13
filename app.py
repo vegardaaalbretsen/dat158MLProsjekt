@@ -6,10 +6,9 @@ import numpy as np
 import nltk
 import os
 
-# Specify a custom nltk data directory
-nltk_data_dir = os.path.expanduser("~/.nltk_data")
-nltk.data.path.append(nltk_data_dir)
-nltk.download("punkt", download_dir=nltk_data_dir)
+# Set NLTK to use the local nltk_data directory
+nltk_data_path = os.path.join(os.path.dirname(__file__), 'nltk_data')
+nltk.data.path.append(nltk_data_path)
 
 # Load the pre-trained model and vectorizer
 with open('logistic_regression_model_tokens.pkl', 'rb') as model_file:
@@ -31,9 +30,11 @@ st.write("Enter some text below to analyze sentiment or classify it into either 
 # Text input for the user
 user_input = st.text_area("Enter your text here:")
 
-# Function to preprocess the input text
+import re
+
 def preprocess_text(text):
-    tokens = word_tokenize(text)  # Tokenize
+    # Use regex to tokenize by finding word characters
+    tokens = re.findall(r'\b\w+\b', text.lower())  # Tokenize using regex
     stemmed_tokens = [stemmer.stem(word) for word in tokens]  # Apply stemming
     return ' '.join(stemmed_tokens)  # Join back to a single string
 
