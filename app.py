@@ -11,10 +11,10 @@ nltk_data_path = os.path.join(os.path.dirname(__file__), 'nltk_data')
 nltk.data.path.append(nltk_data_path)
 
 # Load the pre-trained model and vectorizer
-with open('logistic_regression_model_tokens.pkl', 'rb') as model_file:
+with open('./saved_models/logistic_regression_model_tweaked_tokens.pkl', 'rb') as model_file:
     model = pickle.load(model_file)
 
-with open('vectorizer_tokens.pkl', 'rb') as vectorizer_file:
+with open('./saved_models/vectorizer_tweaked_tokens.pkl', 'rb') as vectorizer_file:
     vectorizer = pickle.load(vectorizer_file)
 
 # Define emotion labels

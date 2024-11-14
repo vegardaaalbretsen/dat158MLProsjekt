@@ -31,3 +31,7 @@ Fear: 47,712
 Surprise: 14,972
 Key Metrics
 Performance metrics for the model include accuracy, precision, and recall, with accuracy reaching approximately 90%
+
+- model_train/: Contains scripts for training models.
+- saved_models/: Stores trained models and vectorizers.
+- plots/: Contains generated plots, such as confusion matrices.
