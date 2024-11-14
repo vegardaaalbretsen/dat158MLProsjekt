@@ -4,7 +4,7 @@ Description: Emotion Classification App
 Authors: Vegard Aa Albretsen, Erlend Vitsø
 Date: November 15, 2024
 
-Generative AI has been used
+Generative AI has been used.
 """
 import streamlit as st
 import pickle
@@ -13,6 +13,9 @@ from nltk.stem import PorterStemmer
 import numpy as np
 import pandas as pd
 import nltk
+import gspread
+from oauth2client.service_account import ServiceAccountCredentials
+import json
 import os
 
 # Set NLTK to use the local nltk_data directory
@@ -68,30 +71,31 @@ if st.button("Analyze Text"):
     else:
         st.write("Please enter some text.")
 
-st.header("Gi oss tilbakemelding")
-st.write("Var denne tjenesten nyttig?")
+# Define Google Sheets credentials and scope
+scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/spreadsheets",
+         "https://www.googleapis.com/auth/drive.file", "https://www.googleapis.com/auth/drive"]
 
-# Opprett tommel opp og tommel ned-knapper
-if st.button("👍 Ja"):
-    feedback_type = "Tommel Opp"
-    st.success("Takk for din positive tilbakemelding!")
-elif st.button("👎 Nei"):
-    feedback_type = "Tommel Ned"
-    st.warning("Vi setter pris på tilbakemeldingen og jobber med å forbedre oss.")
+# Load credentials from Streamlit secrets
+credentials_dict = st.secrets["gcp_service_account"]
+credentials = ServiceAccountCredentials.from_json_keyfile_dict(credentials_dict, scope)
 
-# Lagre tilbakemelding i en CSV-fil hvis en knapp ble trykket
+# Authorize and open the Google Sheet
+client = gspread.authorize(credentials)
+sheet = client.open("Feedback Dat158").sheet1  # Replace with your Google Sheet name
+
+
+# Define Streamlit UI
+st.title("Text Analysis App")
+st.write("Welcome! Please let us know if you found this service helpful.")
+
+# Feedback buttons
+if st.button("👍 Yes"):
+    feedback_type = "Thumbs Up"
+    st.success("Thank you for your positive feedback!")
+elif st.button("👎 No"):
+    feedback_type = "Thumbs Down"
+    st.warning("We appreciate your feedback and are working to improve.")
+
+# Append feedback to Google Sheets if a button was clicked
 if 'feedback_type' in locals():
-    feedback_file = 'feedback_summary.csv'
-
-    # Sjekk om filen allerede finnes
-    if os.path.exists(feedback_file):
-        feedback_data = pd.read_csv(feedback_file)
-    else:
-        feedback_data = pd.DataFrame(columns=["FeedbackType"])
-
-    # Legg til ny tilbakemelding
-    new_feedback = pd.DataFrame([[feedback_type]], columns=["FeedbackType"])
-    feedback_data = pd.concat([feedback_data, new_feedback], ignore_index=True)
-
-    # Lagre tilbake til CSV-fil
-    feedback_data.to_csv(feedback_file, index=False)
+    sheet.append_row([feedback_type])  # Add feedback type as a new row
