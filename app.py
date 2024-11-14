@@ -3,6 +3,7 @@ import pickle
 from nltk.tokenize import word_tokenize
 from nltk.stem import PorterStemmer
 import numpy as np
+import pandas as pd
 import nltk
 import os
 
@@ -58,3 +59,31 @@ if st.button("Analyze Text"):
             st.write(f"{output_labels[idx]}: {probabilities[idx]:.2%}")
     else:
         st.write("Please enter some text.")
+
+st.header("Gi oss tilbakemelding")
+st.write("Var denne tjenesten nyttig?")
+
+# Opprett tommel opp og tommel ned-knapper
+if st.button("👍 Ja"):
+    feedback_type = "Tommel Opp"
+    st.success("Takk for din positive tilbakemelding!")
+elif st.button("👎 Nei"):
+    feedback_type = "Tommel Ned"
+    st.warning("Vi setter pris på tilbakemeldingen og jobber med å forbedre oss.")
+
+# Lagre tilbakemelding i en CSV-fil hvis en knapp ble trykket
+if 'feedback_type' in locals():
+    feedback_file = 'feedback_summary.csv'
+
+    # Sjekk om filen allerede finnes
+    if os.path.exists(feedback_file):
+        feedback_data = pd.read_csv(feedback_file)
+    else:
+        feedback_data = pd.DataFrame(columns=["FeedbackType"])
+
+    # Legg til ny tilbakemelding
+    new_feedback = pd.DataFrame([[feedback_type]], columns=["FeedbackType"])
+    feedback_data = pd.concat([feedback_data, new_feedback], ignore_index=True)
+
+    # Lagre tilbake til CSV-fil
+    feedback_data.to_csv(feedback_file, index=False)
