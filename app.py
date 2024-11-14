@@ -1,3 +1,11 @@
+"""
+Filename: app.py
+Description: Emotion Classification App
+Authors: Vegard Aa Albretsen, Erlend Vitsø
+Date: November 15, 2024
+
+Generative AI has been used
+"""
 import streamlit as st
 import pickle
 from nltk.tokenize import word_tokenize
