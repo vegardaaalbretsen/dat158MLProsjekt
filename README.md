@@ -51,3 +51,6 @@ The model pipeline includes:
 
 ## Key Metrics
 Performance metrics for the model include **accuracy**, **precision**, and **recall**, with accuracy reaching approximately 90%.
+
+## Extras
+The **extras** folder contains files that has played a part in the process, but is not needed for the deployment.
