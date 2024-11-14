@@ -70,7 +70,7 @@ if st.button("Analyze Text"):
 
 # Feedback section
 st.header("Give Us Feedback")
-st.write("Was this service helpful?")
+st.write("Was this service cool?")
 
 # Feedback buttons
 if st.button("👍 Yes"):
