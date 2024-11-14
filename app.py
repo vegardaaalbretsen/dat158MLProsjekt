@@ -63,7 +63,7 @@ if st.button("Analyze Text"):
         if prediction == 1:
             # Display the image if the prediction is "1"
             image = Image.open("images/joy.jpg")  # Replace with your actual image file path
-            st.image(image, caption="Positive emotion detected!", use_column_width=True)
+            st.image(image, caption="Joy detected!", width=300)
 
         # Get probabilities for each emotion
         probabilities = model.predict_proba(input_vector)[0]
