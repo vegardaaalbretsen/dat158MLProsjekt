@@ -62,7 +62,7 @@ if st.button("Analyze Text"):
         # Check if the prediction is "1" (e.g., corresponding to a specific emotion like "Joy")
         if prediction == 1:
             # Display the image if the prediction is "1"
-            image = Image.open("image/joy.png")  # Replace with your actual image file path
+            image = Image.open("images/joy.jpg")  # Replace with your actual image file path
             st.image(image, caption="Positive emotion detected!", use_column_width=True)
 
         # Get probabilities for each emotion
