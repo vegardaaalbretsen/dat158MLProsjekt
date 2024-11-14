@@ -80,6 +80,7 @@ if st.button("Analyze Text"):
 
 # Feedback section
 st.header("Give Us Feedback")
+st.write("This app is made by Vegard Aa Albretsen & Erlend Vitsø")
 st.write("Was this service mega cool?")
 
 # Feedback buttons
