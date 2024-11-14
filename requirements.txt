@@ -3,3 +3,5 @@ scikit-learn
 nltk
 numpy
 pandas
+gspread
+oauth2client
