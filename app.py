@@ -13,9 +13,6 @@ from nltk.stem import PorterStemmer
 import numpy as np
 import pandas as pd
 import nltk
-import gspread
-from oauth2client.service_account import ServiceAccountCredentials
-import json
 import os
 
 # Set NLTK to use the local nltk_data directory
@@ -71,22 +68,9 @@ if st.button("Analyze Text"):
     else:
         st.write("Please enter some text.")
 
-# Define Google Sheets credentials and scope
-scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/spreadsheets",
-         "https://www.googleapis.com/auth/drive.file", "https://www.googleapis.com/auth/drive"]
-
-# Load credentials from Streamlit secrets
-credentials_dict = st.secrets["gcp_service_account"]
-credentials = ServiceAccountCredentials.from_json_keyfile_dict(credentials_dict, scope)
-
-# Authorize and open the Google Sheet
-client = gspread.authorize(credentials)
-sheet = client.open("Feedback Dat158").sheet1  # Replace with your Google Sheet name
-
-
-# Define Streamlit UI
-st.title("Text Analysis App")
-st.write("Welcome! Please let us know if you found this service helpful.")
+# Feedback section
+st.header("Give Us Feedback")
+st.write("Was this service helpful?")
 
 # Feedback buttons
 if st.button("👍 Yes"):
@@ -96,6 +80,20 @@ elif st.button("👎 No"):
     feedback_type = "Thumbs Down"
     st.warning("We appreciate your feedback and are working to improve.")
 
-# Append feedback to Google Sheets if a button was clicked
+# Save feedback to a CSV file if a button was clicked
+# Doesnt work on streamlit but would locally
 if 'feedback_type' in locals():
-    sheet.append_row([feedback_type])  # Add feedback type as a new row
+    feedback_file = 'feedback_summary.csv'
+
+    # Check if the feedback file exists
+    if os.path.exists(feedback_file):
+        feedback_data = pd.read_csv(feedback_file)
+    else:
+        feedback_data = pd.DataFrame(columns=["FeedbackType"])
+
+    # Append new feedback
+    new_feedback = pd.DataFrame([[feedback_type]], columns=["FeedbackType"])
+    feedback_data = pd.concat([feedback_data, new_feedback], ignore_index=True)
+
+    # Save updated feedback data to CSV
+    feedback_data.to_csv(feedback_file, index=False)
