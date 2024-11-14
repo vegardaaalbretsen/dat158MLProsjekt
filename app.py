@@ -14,6 +14,7 @@ import numpy as np
 import pandas as pd
 import nltk
 import os
+from PIL import Image
 
 # Set NLTK to use the local nltk_data directory
 nltk_data_path = os.path.join(os.path.dirname(__file__), 'nltk_data')
@@ -55,6 +56,15 @@ if st.button("Analyze Text"):
         # Transform the processed text using the TF-IDF vectorizer
         input_vector = vectorizer.transform([processed_input])
         
+        # Get prediction for the emotion
+        prediction = model.predict(input_vector)[0]
+
+        # Check if the prediction is "1" (e.g., corresponding to a specific emotion like "Joy")
+        if prediction == 1:
+            # Display the image if the prediction is "1"
+            image = Image.open("image/joy.png")  # Replace with your actual image file path
+            st.image(image, caption="Positive emotion detected!", use_column_width=True)
+
         # Get probabilities for each emotion
         probabilities = model.predict_proba(input_vector)[0]
         
@@ -70,8 +80,7 @@ if st.button("Analyze Text"):
 
 # Feedback section
 st.header("Give Us Feedback")
-st.write("This was made by Vegard Aa Albretsen and Erlend Vitsø")
-st.write("Was this service cool?")
+st.write("Was this service helpful?")
 
 # Feedback buttons
 if st.button("👍 Yes"):
@@ -82,7 +91,6 @@ elif st.button("👎 No"):
     st.warning("We appreciate your feedback and are working to improve.")
 
 # Save feedback to a CSV file if a button was clicked
-# Doesnt work on streamlit but would locally
 if 'feedback_type' in locals():
     feedback_file = 'feedback_summary.csv'
 
