@@ -17,35 +17,8 @@ import os
 from PIL import Image
 import re
 
-nltk.download('punkt')
-
-# Set NLTK to use the local nltk_data directory
-nltk_data_path = os.path.join(os.path.dirname(__file__), 'nltk_data')
-nltk.data.path.append(nltk_data_path)
-
-# Load the pre-trained model and vectorizer
-with open('./saved_models/logistic_regression_model_corrected_tokens.pkl', 'rb') as model_file:
-    model = pickle.load(model_file)
-
-with open('./saved_models/vectorizer_corrected_tokens.pkl', 'rb') as vectorizer_file:
-    vectorizer = pickle.load(vectorizer_file)
-
 # Define emotion labels
 output_labels = ["Sadness", "Joy", "Love", "Anger", "Fear", "Surprise"]
-
-# Initialize the stemmer
-stemmer = PorterStemmer()
-
-# Preprocessing function
-def preprocess_text(user_input):
-    # Remove noise (keep apostrophes and spaces)
-    clean_text = re.sub(r"[^a-zA-Z0-9'\s]", '', user_input).lower()
-    # Tokenize
-    tokens = word_tokenize(clean_text)
-    # Stem each token
-    stemmed_tokens = [stemmer.stem(word) for word in tokens]
-    # Combine tokens back into a single string for vectorizer
-    return ' '.join(stemmed_tokens)
 
 # Set up the Streamlit app layout
 st.title("Text Analysis App")
@@ -55,31 +28,69 @@ st.write("Enter some text below to analyze sentiment or classify it into either 
 user_input = st.text_area("Enter your text here:")
 
 if st.button("Analyze Text"):
-    if user_input:
-        # Preprocess the input text
-        processed_input = preprocess_text(user_input)
-        
-        # Transform the processed text using the TF-IDF vectorizer
-        input_vector = vectorizer.transform([processed_input])
-        
-        # Get prediction for the emotion
-        prediction = model.predict(input_vector)[0]
+    # **Flytte all logikk hit**
+    try:
+        # Nødvendige oppsett og nedlastinger
+        nltk.download('punkt', quiet=True)
 
-        # Display the prediction
-        st.write(f"Predicted Emotion: {output_labels[prediction]}")
+        # Last inn modellen og vectorizeren
+        with open('./saved_models/logistic_regression_model_corrected_tokens.pkl', 'rb') as model_file:
+            model = pickle.load(model_file)
 
-        # Get probabilities for each emotion
-        probabilities = model.predict_proba(input_vector)[0]
-        
-        # Sort emotions by probability in descending order
-        sorted_indices = np.argsort(probabilities)[::-1]
-        
-        # Display top predictions
-        st.write("Top Predictions:")
-        for idx in sorted_indices:
-            st.write(f"{output_labels[idx]}: {probabilities[idx]:.2%}")
-    else:
-        st.write("Please enter some text.")
+        with open('./saved_models/vectorizer_corrected_tokens.pkl', 'rb') as vectorizer_file:
+            vectorizer = pickle.load(vectorizer_file)
+
+        # Initialize the stemmer
+        stemmer = PorterStemmer()
+
+        # Preprocessing function
+        def preprocess_text(user_input):
+            # Remove noise (keep apostrophes and spaces)
+            clean_text = re.sub(r"[^a-zA-Z0-9'\s]", '', user_input).lower()
+            # Tokenize
+            tokens = word_tokenize(clean_text)
+            # Stem each token
+            stemmed_tokens = [stemmer.stem(word) for word in tokens]
+            # Combine tokens back into a single string for vectorizer
+            return ' '.join(stemmed_tokens)
+
+        if user_input.strip():  # Valider at input ikke er tomt
+            # Preprocess the input text
+            processed_input = preprocess_text(user_input)
+            
+            # Transform the processed text using the TF-IDF vectorizer
+            input_vector = vectorizer.transform([processed_input])
+            
+            # Get prediction for the emotion
+            prediction = model.predict(input_vector)[0]
+
+            # Display the prediction
+            st.write(f"Predicted Emotion: {output_labels[prediction]}")
+
+            # Get probabilities for each emotion
+            probabilities = model.predict_proba(input_vector)[0]
+            
+            # Sort emotions by probability in descending order
+            sorted_indices = np.argsort(probabilities)[::-1]
+            
+            # Display top predictions
+            st.write("Top Predictions:")
+            for idx in sorted_indices:
+                st.write(f"{output_labels[idx]}: {probabilities[idx]:.2%}")
+
+            # Optional: Show an image for "Joy" as an example
+            if prediction == 1:  # Assuming "Joy" corresponds to index 1
+                image_path = "images/joy.jpg"
+                if os.path.exists(image_path):
+                    image = Image.open(image_path)
+                    st.image(image, caption="Joy detected!", width=300)
+                else:
+                    st.warning("Image for 'Joy' not found.")
+        else:
+            st.warning("Input cannot be empty. Please enter some text.")
+    except Exception as e:
+        st.error(f"An error occurred: {e}")
+
 
 # Feedback section
 st.header("Give Us Feedback")
