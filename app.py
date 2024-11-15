@@ -25,19 +25,15 @@ st.write("Location of app.py:", os.path.abspath(__file__))
 nltk_data_path = os.path.join(os.path.dirname(__file__), './nltk_data')
 nltk.data.path.append(nltk_data_path)
 
-# Valider at punkt finnes
-try:
-    nltk.data.find('tokenizers/punkt')
-    st.write("Punkt tokenizer found!")
-except LookupError:
-    raise RuntimeError(f"The 'punkt' tokenizer data is missing in {nltk_data_path}. Ensure 'nltk_data' is correctly uploaded.")
+# Debugging: Print nltk paths
+st.write("NLTK data paths:", nltk.data.path)
 
-# Valider at 'punkt' finnes
+# Test word_tokenize and trace its resource lookup
 try:
-    nltk.data.find('tokenizers/punkt')
-    print(f"'punkt' resource found in: {nltk_data_path}")
-except LookupError:
-    raise RuntimeError(f"The 'punkt' tokenizer data is missing in {nltk_data_path}. Ensure 'nltk_data' is correctly uploaded.")
+    test_sentence = "This is a test sentence."
+    st.write("Tokens:", word_tokenize(test_sentence))
+except Exception as e:
+    st.write("Error during tokenization:", str(e))
 
 # Load the pre-trained model and vectorizer
 with open('./saved_models/logistic_regression_model_corrected_tokens.pkl', 'rb') as model_file:
@@ -57,7 +53,7 @@ def preprocess_text(user_input):
     # Remove noise (keep apostrophes and spaces)
     clean_text = re.sub(r"[^a-zA-Z0-9'\s]", '', user_input).lower()
     # Tokenize
-    tokens = word_tokenize(clean_text)
+    tokens = word_tokenize(clean_text, language="english")
     # Stem each token
     stemmed_tokens = [stemmer.stem(word) for word in tokens]
     # Combine tokens back into a single string for vectorizer
