@@ -8,15 +8,28 @@ import nltk
 import matplotlib.pyplot as plt
 import pickle
 import seaborn as sns
+import ast
 
 nltk.download('stopwords')
 
 # Load the dataset
-data = pd.read_csv('./data/balanced_dataset.csv')
+data = pd.read_csv('../extras/balanced_dataset.csv')
 
 # Prepare features and labels
 X = data['tokens']
 y = data['label']
+
+# Konverter strengrepresentasjon av liste til faktisk liste
+data['tokens'] = data['tokens'].apply(ast.literal_eval)
+
+# Fjern ekstra mellomrom i tokens
+data['tokens'] = data['tokens'].apply(lambda tokens: [token.replace(' ', '') for token in tokens])
+
+# Kombiner tokens tilbake til en tekststreng for vectorisering
+data['processed_text'] = data['tokens'].apply(lambda tokens: ' '.join(tokens))
+
+# Debugging: Sjekk hvordan data ser ut nå
+print(data['processed_text'].head())
 
 # Vectorizer configuration
 vectorizer = TfidfVectorizer(
@@ -29,8 +42,7 @@ vectorizer = TfidfVectorizer(
     strip_accents='unicode'
 )
 
-# Transform text data
-X = vectorizer.fit_transform(data['text'])
+X = vectorizer.fit_transform(data['processed_text'])
 
 # Train-test split
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
@@ -60,8 +72,8 @@ plt.ylabel("Actual Class")
 plt.show()
 
 # Save the model and vectorizer
-model_path = './saved_model/logistic_regression_model_tokens.pkl'
-vectorizer_path = './saved_model/vectorizer_tokens.pkl'
+model_path = './logistic_regression_model_corrected_tokens.pkl'
+vectorizer_path = './vectorizer_corrected_tokens.pkl'
 
 with open(model_path, 'wb') as model_file:
     pickle.dump(model, model_file)
