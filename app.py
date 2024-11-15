@@ -17,6 +17,7 @@ from PIL import Image
 import re
 import nltk
 
+st.write("nltk_data/tokenizers:", os.listdir('/mount/src/dat158mlprosjekt/nltk_data/tokenizers'))
 # Debugging: Print current paths and resource availability
 st.write("Current working directory:", os.getcwd())
 st.write("Location of app.py:", os.path.abspath(__file__))
@@ -33,7 +34,7 @@ st.write("NLTK data paths:", nltk.data.path)
 # Test if word_tokenize works
 try:
     test_sentence = "This is a test sentence."
-    tokens = word_tokenize(test_sentence, language="english")
+    tokens = word_tokenize(test_sentence)
     st.write("Tokenization successful:", tokens)
 except Exception as e:
     st.write("Error during tokenization:", str(e))
@@ -56,7 +57,7 @@ def preprocess_text(user_input):
     # Remove noise (keep apostrophes and spaces)
     clean_text = re.sub(r"[^a-zA-Z0-9'\s]", '', user_input).lower()
     # Tokenize
-    tokens = word_tokenize(clean_text, language="english")
+    tokens = word_tokenize(clean_text)
     # Stem each token
     stemmed_tokens = [stemmer.stem(word) for word in tokens]
     # Combine tokens back into a single string for vectorizer
