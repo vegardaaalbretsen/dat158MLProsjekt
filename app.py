@@ -16,22 +16,25 @@ import os
 from PIL import Image
 import re
 import nltk
-import os
 
-#Debugging
+# Debugging: Print current paths and resource availability
 st.write("Current working directory:", os.getcwd())
 st.write("Location of app.py:", os.path.abspath(__file__))
-# Angi sti til lokal nltk_data-mappe
-nltk_data_path = os.path.join(os.path.dirname(__file__), './nltk_data')
-nltk.data.path.append(nltk_data_path)
 
-# Debugging: Print nltk paths
+# Set up path to local nltk_data folder
+nltk_data_path = os.path.join(os.path.dirname(__file__), './nltk_data')
+nltk.data.path = [nltk_data_path]
+
+# Verify existence of punkt tokenizer
+punkt_path = os.path.join(nltk_data_path, "tokenizers/punkt/english.pickle")
+st.write(f"Punkt path exists: {os.path.exists(punkt_path)}")
 st.write("NLTK data paths:", nltk.data.path)
 
-# Test word_tokenize and trace its resource lookup
+# Test if word_tokenize works
 try:
     test_sentence = "This is a test sentence."
-    st.write("Tokens:", word_tokenize(test_sentence))
+    tokens = word_tokenize(test_sentence, language="english")
+    st.write("Tokenization successful:", tokens)
 except Exception as e:
     st.write("Error during tokenization:", str(e))
 
@@ -68,28 +71,31 @@ user_input = st.text_area("Enter your text here:")
 
 if st.button("Analyze Text"):
     if user_input:
-        # Preprocess the input text
-        processed_input = preprocess_text(user_input)
-        
-        # Transform the processed text using the TF-IDF vectorizer
-        input_vector = vectorizer.transform([processed_input])
-        
-        # Get prediction for the emotion
-        prediction = model.predict(input_vector)[0]
+        try:
+            # Preprocess the input text
+            processed_input = preprocess_text(user_input)
 
-        # Display the prediction
-        st.write(f"Predicted Emotion: {output_labels[prediction]}")
+            # Transform the processed text using the TF-IDF vectorizer
+            input_vector = vectorizer.transform([processed_input])
 
-        # Get probabilities for each emotion
-        probabilities = model.predict_proba(input_vector)[0]
-        
-        # Sort emotions by probability in descending order
-        sorted_indices = np.argsort(probabilities)[::-1]
-        
-        # Display top predictions
-        st.write("Top Predictions:")
-        for idx in sorted_indices:
-            st.write(f"{output_labels[idx]}: {probabilities[idx]:.2%}")
+            # Get prediction for the emotion
+            prediction = model.predict(input_vector)[0]
+
+            # Display the prediction
+            st.write(f"Predicted Emotion: {output_labels[prediction]}")
+
+            # Get probabilities for each emotion
+            probabilities = model.predict_proba(input_vector)[0]
+
+            # Sort emotions by probability in descending order
+            sorted_indices = np.argsort(probabilities)[::-1]
+
+            # Display top predictions
+            st.write("Top Predictions:")
+            for idx in sorted_indices:
+                st.write(f"{output_labels[idx]}: {probabilities[idx]:.2%}")
+        except Exception as e:
+            st.write("Error processing text:", str(e))
     else:
         st.write("Please enter some text.")
 
