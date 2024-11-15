@@ -7,41 +7,40 @@ Date: November 15, 2024
 Generative AI has been used.
 """
 import streamlit as st
-import numpy as np
 import pickle
+from nltk.tokenize import word_tokenize
+from nltk.stem import PorterStemmer
+import numpy as np
 import pandas as pd
 import os
 from PIL import Image
 import re
+import nltk
 
+nltk.download('punkt')
 # Load the pre-trained model and vectorizer
-with open('./saved_models/logistic_regression_model_tweaked_tokens.pkl', 'rb') as model_file:
+with open('./saved_models/logistic_regression_model_corrected_tokens.pkl', 'rb') as model_file:
     model = pickle.load(model_file)
 
-with open('./saved_models/vectorizer_tweaked_tokens.pkl', 'rb') as vectorizer_file:
+with open('./saved_models/vectorizer_corrected_tokens.pkl', 'rb') as vectorizer_file:
     vectorizer = pickle.load(vectorizer_file)
 
 # Define emotion labels
 output_labels = ["Sadness", "Joy", "Love", "Anger", "Fear", "Surprise"]
 
+# Initialize the stemmer
+stemmer = PorterStemmer()
+
 # Preprocessing function
 def preprocess_text(user_input):
     # Remove noise (keep apostrophes and spaces)
-    return re.sub(r"[^a-zA-Z0-9'\s]", '', user_input).lower()
-
-# Function to display an image for a specific emotion
-def display_emotion_image(predicted_emotion):
-    if predicted_emotion == "Joy":
-        try:
-            image_path = './images/joy.jpg'  # Ensure this path is correct and the image exists
-            if os.path.exists(image_path):
-                image = Image.open(image_path)
-                resized_image = image.resize((150, 150))  # Resize to smaller dimensions
-                st.image(resized_image, caption="Joyful Emotion!", use_column_width=False)
-            else:
-                st.write("Joy image not found at the specified path.")
-        except Exception as e:
-            st.write("Error displaying image:", str(e))
+    clean_text = re.sub(r"[^a-zA-Z0-9'\s]", '', user_input).lower()
+    # Tokenize
+    tokens = word_tokenize(clean_text)
+    # Stem each token
+    stemmed_tokens = [stemmer.stem(word) for word in tokens]
+    # Combine tokens back into a single string for vectorizer
+    return ' '.join(stemmed_tokens)
 
 # Set up the Streamlit app layout
 st.title("Text Analysis App")
@@ -64,9 +63,6 @@ if st.button("Analyze Text"):
 
             # Display the prediction
             st.write(f"Predicted Emotion: {output_labels[prediction]}")
-
-            # Display an image if the predicted emotion is Joy
-            display_emotion_image(output_labels[prediction])
 
             # Get probabilities for each emotion
             probabilities = model.predict_proba(input_vector)[0]
