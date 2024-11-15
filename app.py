@@ -18,8 +18,15 @@ import re
 import nltk
 
 # Angi sti til lokal nltk_data-mappe
-nltk_data_path = os.path.join(os.path.dirname(__file__), 'nltk_data')
+nltk_data_path = os.path.join(os.path.dirname(__file__), './nltk_data')
 nltk.data.path.append(nltk_data_path)
+
+# Valider at 'punkt' finnes
+try:
+    nltk.data.find('tokenizers/punkt')
+    print(f"'punkt' resource found in: {nltk_data_path}")
+except LookupError:
+    raise RuntimeError(f"The 'punkt' tokenizer data is missing in {nltk_data_path}. Ensure 'nltk_data' is correctly uploaded.")
 
 # Load the pre-trained model and vectorizer
 with open('./saved_models/logistic_regression_model_corrected_tokens.pkl', 'rb') as model_file:
