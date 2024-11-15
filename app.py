@@ -26,7 +26,7 @@ nltk_data_path = os.path.join(os.path.dirname(__file__), './nltk_data')
 nltk.data.path = [nltk_data_path]
 
 # Verify existence of punkt tokenizer
-punkt_path = os.path.join(nltk_data_path, "tokenizers/punkt/english.pickle")
+punkt_path = os.path.join(nltk_data_path, "tokenizers/punkt_tab/english.pickle")
 st.write(f"Punkt path exists: {os.path.exists(punkt_path)}")
 st.write("NLTK data paths:", nltk.data.path)
 
