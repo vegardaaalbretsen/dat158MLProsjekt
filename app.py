@@ -16,7 +16,11 @@ import os
 from PIL import Image
 import re
 import nltk
+import os
 
+#Debugging
+st.write("Current working directory:", os.getcwd())
+st.write("Location of app.py:", os.path.abspath(__file__))
 # Angi sti til lokal nltk_data-mappe
 nltk_data_path = os.path.join(os.path.dirname(__file__), './nltk_data')
 nltk.data.path.append(nltk_data_path)
