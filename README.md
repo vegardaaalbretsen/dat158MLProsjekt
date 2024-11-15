@@ -4,7 +4,7 @@
 This project applies machine learning to classify text into six emotions: **anger**, **fear**, **joy**, **love**, **sadness**, and **surprise**. The model is designed to analyze customer feedback and other text data, providing insights to improve user engagement, customer service, and content personalization.
 
 ### Project Report
-Here is the project report, following the template provided by Steffen Mæland [Project Report](./Emotion-Classification.pdf)
+Here is the project report, following the template provided by Steffen Mæland [Project Report](./EmotionClassification.pdf)
 
 ### Try the App
 Access the live app on Streamlit: [dat158mlprosjekt.streamlit.app](https://dat158mlprosjekt.streamlit.app/)
