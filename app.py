@@ -25,6 +25,13 @@ st.write("Location of app.py:", os.path.abspath(__file__))
 nltk_data_path = os.path.join(os.path.dirname(__file__), './nltk_data')
 nltk.data.path.append(nltk_data_path)
 
+# Valider at punkt finnes
+try:
+    nltk.data.find('tokenizers/punkt')
+    st.write("Punkt tokenizer found!")
+except LookupError:
+    raise RuntimeError(f"The 'punkt' tokenizer data is missing in {nltk_data_path}. Ensure 'nltk_data' is correctly uploaded.")
+
 # Valider at 'punkt' finnes
 try:
     nltk.data.find('tokenizers/punkt')
