@@ -17,6 +17,8 @@ import os
 from PIL import Image
 import re
 
+nltk.download('punkt')
+
 # Set NLTK to use the local nltk_data directory
 nltk_data_path = os.path.join(os.path.dirname(__file__), 'nltk_data')
 nltk.data.path.append(nltk_data_path)
