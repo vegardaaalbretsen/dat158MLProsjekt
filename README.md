@@ -59,3 +59,8 @@ Performance metrics for the model include accuracy, precision, and recall, with 
 - model_train/: Contains scripts for training models.
 - saved_models/: Stores trained models and vectorizers.
 - plots/: Contains generated plots, such as confusion matrices.
+
+### Definitions
+**Tokenization**: Splitting the words into smaller bits
+**Stemming**: Reducing words into their "stems", their original forms (e.g. running/ran/runs all into run)
+**TF-IDF**: Reduces words into numbers in context of all other words - Unique words to the dataset has a higher weight
